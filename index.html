@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Workout">
+<meta name="theme-color" content="#343b2e">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Bodybuilding Transformation System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --olive: #4a5240;
+    --olive-dark: #343b2e;
+    --olive-light: #6b7560;
+    --cream: #f5f2ec;
+    --white: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --border: #d8d4ca;
+    --accent: #c8b84a;
+    --rest: #e8e4dc;
+    --saved: #4a8c5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  header {
+    background: var(--olive-dark);
+    color: var(--white);
+    padding: 16px 16px 12px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: var(--accent);
+  }
+
+  header p {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-top: 2px;
+  }
+
+  /* Reset button */
+  .reset-bar {
+    background: var(--olive-dark);
+    padding: 0 16px 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .reset-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  /* Warm-up section */
+  .warmup-section {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 14px 16px;
+  }
+
+  .warmup-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .warmup-toggle h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 1px;
+    color: var(--olive-dark);
+  }
+
+  .warmup-toggle span { font-size: 12px; color: var(--olive-light); }
+
+  .warmup-body { display: none; margin-top: 10px; }
+  .warmup-body.open { display: block; }
+
+  .warmup-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .warmup-table th {
+    background: var(--olive);
+    color: var(--white);
+    padding: 6px 8px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .warmup-table td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .warmup-table tr:nth-child(even) td { background: #faf9f6; }
+  .warmup-table td:first-child { font-weight: 600; color: var(--olive); white-space: nowrap; width: 110px; }
+
+  /* Day nav */
+  .day-nav {
+    display: flex;
+    overflow-x: auto;
+    background: var(--olive-dark);
+    gap: 2px;
+    padding: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky;
+    top: calc(60px + env(safe-area-inset-top));
+    z-index: 99;
+  }
+  .day-nav::-webkit-scrollbar { display: none; }
+
+  .day-btn {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #ccc;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 8px 11px;
+    cursor: pointer;
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .day-btn.active { background: var(--accent); border-color: var(--accent); color: var(--olive-dark); }
+
+  /* Progress dots on nav */
+  .day-btn .dot-row { display: flex; gap: 3px; justify-content: center; margin-top: 3px; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+  .day-btn.active .dot { background: rgba(52,59,46,0.4); }
+  .dot.filled { background: var(--saved) !important; }
+  .day-btn.active .dot.filled { background: #2a6640 !important; }
+
+  /* Day block */
+  .day-block { display: none; }
+  .day-block.active { display: block; }
+
+  .day-header {
+    background: var(--olive);
+    color: var(--white);
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .day-label { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; color: var(--accent); }
+  .day-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.8); }
+  .focus-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 2px;
+  }
+
+  /* Exercise cards */
+  .exercise-list { padding: 10px 12px 24px; display: flex; flex-direction: column; gap: 10px; }
+
+  .exercise-card {
+    background: var(--white);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: border-color 0.2s;
+  }
+
+  .exercise-card.has-data { border-color: #a8c8b0; }
+
+  .exercise-card-header {
+    background: var(--olive-dark);
+    color: var(--white);
+    padding: 10px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    user-select: none;
+  }
+  .exercise-card.has-data .exercise-card-header { background: #2a3826; }
+
+  .exercise-name { font-weight: 600; font-size: 14px; flex: 1; }
+  .exercise-meta { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+
+  .meta-chip {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.9);
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .meta-chip.rpe { background: var(--accent); color: var(--olive-dark); }
+
+  .chevron { color: rgba(255,255,255,0.4); font-size: 11px; transition: transform 0.2s; flex-shrink: 0; margin-top: 2px; }
+  .exercise-card.open .chevron { transform: rotate(180deg); }
+
+  .exercise-body { display: none; padding: 12px; }
+  .exercise-card.open .exercise-body { display: block; }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .detail-item label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--olive-light); font-weight: 600; margin-bottom: 2px; }
+  .detail-item span { font-size: 13px; font-weight: 500; }
+
+  .subs-row { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .sub-tag {
+    background: #eef0e8;
+    color: var(--olive);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 3px;
+    border: 1px solid #d4d8c8;
+  }
+
+  .note-box {
+    background: #faf9f5;
+    border-left: 3px solid var(--accent);
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-radius: 0 3px 3px 0;
+    margin-bottom: 12px;
+  }
+
+  /* Tracking */
+  .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--olive-light); font-weight: 600; margin-bottom: 6px; }
+
+  .tracking-grid { display: grid; gap: 5px; margin-bottom: 10px; }
+  .tracking-grid.sets-2 { grid-template-columns: 1fr 1fr; }
+  .tracking-grid.sets-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .tracking-grid.sets-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .tracking-cell { background: #f0eeea; border: 1px solid var(--border); border-radius: 4px; padding: 6px 4px; text-align: center; }
+  .tracking-cell label { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--olive-light); font-weight: 600; margin-bottom: 3px; }
+  .tracking-cell input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 2px;
+    font-size: 12px;
+    text-align: center;
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    -webkit-appearance: none;
+  }
+  .tracking-cell input:focus { outline: none; border-color: var(--olive); }
+  .tracking-cell.saved { background: #eaf2ec; border-color: #a8c8b0; }
+  .tracking-cell.saved input { background: #f4faf5; border-color: #a8c8b0; }
+
+  .save-btn {
+    width: 100%;
+    background: var(--olive);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.15s;
+  }
+  .save-btn:active { background: var(--olive-dark); }
+  .save-btn.saved-state { background: var(--saved); }
+
+  .saved-indicator { font-size: 11px; color: var(--saved); text-align: center; margin-top: 5px; display: none; font-weight: 600; }
+  .saved-indicator.visible { display: block; }
+
+  /* Rest day */
+  .rest-day {
+    background: var(--rest);
+    text-align: center;
+    padding: 28px 16px;
+    margin: 10px;
+    border-radius: 6px;
+    border: 1px dashed var(--border);
+  }
+  .rest-day h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--olive-light); }
+  .rest-day p { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bodybuilding Transformation System</h1>
+  <p>Foundation Block — Week 1</p>
+</header>
+
+<!-- Warm-up Protocol (collapsible) -->
+<div class="warmup-section">
+  <div class="warmup-toggle" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('span').textContent = this.nextElementSibling.classList.contains('open') ? '▲ Hide' : '▼ Show'">
+    <h2>Warm-Up Protocol</h2>
+    <span>▼ Show</span>
+  </div>
+  <div class="warmup-body">
+    <table class="warmup-table">
+      <thead><tr><th>Sets Listed</th><th>Protocol</th></tr></thead>
+      <tbody>
+        <tr><td>1 Set</td><td>~40% of working weight × 6–10 reps until warm and loose</td></tr>
+        <tr><td>2 Sets</td><td>Set 1 → ~50% × 6–10 · Set 2 → ~70% × 4–6</td></tr>
+        <tr><td>3 Sets</td><td>Set 1 → ~45% × 6–10 · Set 2 → ~65% × 4–6 · Set 3 → ~85% × 3–4</td></tr>
+        <tr><td>4 Sets</td><td>Set 1 → ~40% × 6–10 · Set 2 → ~60% × 4–6 · Set 3 → ~75% × 2–4 · Set 4 → ~85% × 2–4</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Day Nav -->
+<div class="day-nav" id="dayNav">
+  <button class="day-btn active" onclick="showDay(0)">
+    Day 1 · Upper
+    <div class="dot-row" id="dots-0"></div>
+  </button>
+  <button class="day-btn" onclick="showDay(1)">
+    Day 2 · Lower
+    <div class="dot-row" id="dots-1"></div>
+  </button>
+  <button class="day-btn" onclick="showDay(2)">
+    Day 3 · Pull
+    <div class="dot-row" id="dots-2"></div>
+  </button>
+  <button class="day-btn" onclick="showDay(3)">
+    Day 4 · Push
+    <div class="dot-row" id="dots-3"></div>
+  </button>
+  <button class="day-btn" onclick="showDay(4)">
+    Day 5 · Legs
+    <div class="dot-row" id="dots-4"></div>
+  </button>
+</div>
+
+<!-- ═══════════════════════════════════════════ DAY 1 -->
+<div class="day-block active" id="day-0">
+  <div class="day-header">
+    <div><div class="day-label">Day 1</div><div class="day-title">Upper Body</div></div>
+    <div class="focus-badge">Strength Focus</div>
+  </div>
+  <div class="exercise-list">
+
+    <div class="exercise-card" id="d0-e0">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">45° Incline Barbell Press</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>3–5 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">45° Incline DB Press</span><span class="sub-tag">45° Incline Machine Press</span></div>
+        <div class="note-box">1 second pause at the bottom of each rep while maintaining tension on the pecs.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 135×8" oninput="markDirty('d0-e0')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="135×8" oninput="markDirty('d0-e0')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="135×8" oninput="markDirty('d0-e0')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e0')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e0">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d0-e1">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Cable Crossover / Ladders</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>1–2 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">Pec Deck</span><span class="sub-tag">Bottom-Half DB Fly</span></div>
+        <div class="note-box">Do one set with low cable, one with medium-high, one with high cable position. If you only have one or two sets, choose the position(s) you prefer.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 30×10" oninput="markDirty('d0-e1')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="30×10" oninput="markDirty('d0-e1')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="30×10" oninput="markDirty('d0-e1')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e1')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e1">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d0-e2">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Wide-Grip Pull-Up</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>2–3 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">Wide-Grip Lat Pulldown</span><span class="sub-tag">Dual Handle Lat Pulldown</span></div>
+        <div class="note-box">1.5x shoulder width overhand grip. Give 2–3 second negative. Feel your lats pulling apart on the way down.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="BW×8" oninput="markDirty('d0-e2')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="BW×8" oninput="markDirty('d0-e2')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="BW×8" oninput="markDirty('d0-e2')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e2')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e2">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d0-e3">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">High Cable Lateral Raise</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>1–2 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">High Cable Cuffed Lateral Raise</span><span class="sub-tag">Lean-In DB Lateral Raise</span></div>
+        <div class="note-box">Focus on squeezing your lateral delt to move the weight.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 15×10" oninput="markDirty('d0-e3')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="15×10" oninput="markDirty('d0-e3')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="15×10" oninput="markDirty('d0-e3')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e3')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e3">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d0-e4">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Pending Deficit Row</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>2–3 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">Smith Machine Row</span><span class="sub-tag">Single Arm DB Row</span></div>
+        <div class="note-box">Stand on a bumper plate. Focus on getting a big stretch and touch your stomach/chest on each rep.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 135×6" oninput="markDirty('d0-e4')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="135×6" oninput="markDirty('d0-e4')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="135×6" oninput="markDirty('d0-e4')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e4')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e4">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d0-e5">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Overhead Cable Triceps Extension</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>1–2 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">OHC Triceps Extension (Rope)</span><span class="sub-tag">DB Skull Crusher</span></div>
+        <div class="note-box">Optionally pause for 0.5–1 second in the stretched aspect of each rep.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 40×10" oninput="markDirty('d0-e5')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="40×10" oninput="markDirty('d0-e5')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="40×10" oninput="markDirty('d0-e5')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e5')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e5">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d0-e6">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Bayesian Cable Curl</div>
+          <div class="exercise-meta">
+            <span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
+          </div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Rest</label><span>1–2 min</span></div>
+          <div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div>
+        </div>
+        <div class="subs-row"><span class="sub-tag">Seated Support Cable Curl</span><span class="sub-tag">Incline DB Stretch Curl</span></div>
+        <div class="note-box">If you have a left/right bicep imbalance, do 1 arm at a time starting with the weaker arm. Match reps with the other arm once done.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 25×10" oninput="markDirty('d0-e6')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="25×10" oninput="markDirty('d0-e6')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="25×10" oninput="markDirty('d0-e6')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d0-e6')">Save</button>
+        <div class="saved-indicator" id="ind-d0-e6">✓ Saved</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ DAY 2 -->
+<div class="day-block" id="day-1">
+  <div class="day-header">
+    <div><div class="day-label">Day 2</div><div class="day-title">Lower Body</div></div>
+    <div class="focus-badge">Strength Focus</div>
+  </div>
+  <div class="exercise-list">
+
+    <div class="exercise-card" id="d1-e0">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Lying Leg Curl</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Seated Leg Curl</span><span class="sub-tag">Nordic Ham Curl</span></div>
+        <div class="note-box">Set the machine so you get the biggest stretch at the bottom. Prevent your butt from popping up as you curl.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 70×10" oninput="markDirty('d1-e0')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="70×10" oninput="markDirty('d1-e0')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="70×10" oninput="markDirty('d1-e0')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d1-e0')">Save</button>
+        <div class="saved-indicator" id="ind-d1-e0">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d1-e1">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Smith Machine Squat</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>3–5 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">DB Bulgarian Split Squat</span><span class="sub-tag">High Bar Back Squat</span></div>
+        <div class="note-box">Feet forward ~1.5 inches from a normal squat stance to allow a more upright torso and quad emphasis. If your hips rise at the bottom, move feet further forward.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 185×6" oninput="markDirty('d1-e1')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="185×6" oninput="markDirty('d1-e1')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="185×6" oninput="markDirty('d1-e1')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d1-e1')">Save</button>
+        <div class="saved-indicator" id="ind-d1-e1">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d1-e2">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Barbell RDL</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>2–3 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">DB RDL</span><span class="sub-tag">Stiff-Grip RDL</span></div>
+        <div class="note-box">Stop about 75% of the way to full lockout to keep tension on the hamstrings (stay in the bottom 3/4 of ROM).</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 225×6" oninput="markDirty('d1-e2')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="225×6" oninput="markDirty('d1-e2')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="225×6" oninput="markDirty('d1-e2')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d1-e2')">Save</button>
+        <div class="saved-indicator" id="ind-d1-e2">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d1-e3">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Leg Extension</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Reverse Nordic</span><span class="sub-tag">Sissy Squat</span></div>
+        <div class="note-box">Seat back as far as possible. Grab handles hard to pull butt into seat. 2–3 second negative. Feel your quads pulling apart.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 100×10" oninput="markDirty('d1-e3')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="100×10" oninput="markDirty('d1-e3')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="100×10" oninput="markDirty('d1-e3')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d1-e3')">Save</button>
+        <div class="saved-indicator" id="ind-d1-e3">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d1-e4">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Standing Calf Raise</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Seated Calf Raise</span><span class="sub-tag">Leg Press Calf Press</span></div>
+        <div class="note-box">1–2 second pause at the bottom. Roll your ankle back and forth on the balls of your feet rather than just going up on your toes.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 180×6" oninput="markDirty('d1-e4')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="180×6" oninput="markDirty('d1-e4')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="180×6" oninput="markDirty('d1-e4')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d1-e4')">Save</button>
+        <div class="saved-indicator" id="ind-d1-e4">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d1-e5">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Cable Crunch</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Decline Weighted Crunch</span><span class="sub-tag">Machine Crunch</span></div>
+        <div class="note-box">Round your lower back as you crunch. Maintain a mind-muscle connection with your 6-pack.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 50×10" oninput="markDirty('d1-e5')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="50×10" oninput="markDirty('d1-e5')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="50×10" oninput="markDirty('d1-e5')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d1-e5')">Save</button>
+        <div class="saved-indicator" id="ind-d1-e5">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="rest-day"><h3>REST DAY</h3><p>Following Day 2</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ DAY 3 -->
+<div class="day-block" id="day-2">
+  <div class="day-header">
+    <div><div class="day-label">Day 3</div><div class="day-title">Pull</div></div>
+    <div class="focus-badge">Hypertrophy Focus</div>
+  </div>
+  <div class="exercise-list">
+
+    <div class="exercise-card" id="d2-e0">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Neutral-Grip Lat Pulldown</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>2–3 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Neutral-Grip Pull-Up</span><span class="sub-tag">Dual Handle Lat Pulldown</span></div>
+        <div class="note-box">Handle more out in front — like a cross between a pullover and a pulldown. Focus on feeling the lats working more than the weight.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 120×10" oninput="markDirty('d2-e0')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="120×10" oninput="markDirty('d2-e0')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="120×10" oninput="markDirty('d2-e0')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e0')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e0">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d2-e1">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Chest Supported Machine Row</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>2–3 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Incline CS DB Row</span><span class="sub-tag">Chest Supported DB Row</span></div>
+        <div class="note-box">Flare elbows out at roughly 45° and squeeze your shoulder blades together at the top of each rep.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 150×10" oninput="markDirty('d2-e1')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="150×10" oninput="markDirty('d2-e1')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="150×10" oninput="markDirty('d2-e1')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e1')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e1">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d2-e2">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Neutral-Grip Seated Cable Row</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Helms Row</span><span class="sub-tag">Meadows Row</span></div>
+        <div class="note-box">Focus on squeezing your shoulder blades together, driving your elbows down and back.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 110×12" oninput="markDirty('d2-e2')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="110×12" oninput="markDirty('d2-e2')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="110×12" oninput="markDirty('d2-e2')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e2')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e2">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d2-e3">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">1-Arm 45° Cable Rear Delt Fly</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Rope Face Pull</span><span class="sub-tag">Reverse Pec Deck</span></div>
+        <div class="note-box">Pause 1–2 seconds in the squeeze of each rep. Contract the rear delt hard.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 20×12" oninput="markDirty('d2-e3')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="20×12" oninput="markDirty('d2-e3')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="20×12" oninput="markDirty('d2-e3')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e3')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e3">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d2-e4">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Machine Shrug</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Cable Paused Shrug</span><span class="sub-tag">DB Shrug</span></div>
+        <div class="note-box">Brief pause at the top of ROM. Think about pulling your shoulders up to your ears!</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 200×12" oninput="markDirty('d2-e4')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="200×12" oninput="markDirty('d2-e4')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="200×12" oninput="markDirty('d2-e4')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e4')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e4">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d2-e5">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">EZ Bar Cable Curl</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">EZ Bar Curl</span><span class="sub-tag">DB Curl</span></div>
+        <div class="note-box">Cable at lowest position. Constant tension on the biceps. Slow, controlled reps.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 60×12" oninput="markDirty('d2-e5')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="60×12" oninput="markDirty('d2-e5')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e5')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e5">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d2-e6">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Machine Preacher Curl</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 1</span><span class="meta-chip">12–15 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">EZ Bar Preacher Curl</span><span class="sub-tag">DB Preacher Curl</span></div>
+        <div class="note-box">Smooth, controlled reps. Mind-muscle connection with the biceps.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 80×14" oninput="markDirty('d2-e6')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="note" oninput="markDirty('d2-e6')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d2-e6')">Save</button>
+        <div class="saved-indicator" id="ind-d2-e6">✓ Saved</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ DAY 4 -->
+<div class="day-block" id="day-3">
+  <div class="day-header">
+    <div><div class="day-label">Day 4</div><div class="day-title">Push</div></div>
+    <div class="focus-badge">Hypertrophy Focus</div>
+  </div>
+  <div class="exercise-list">
+
+    <div class="exercise-card" id="d3-e0">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Barbell Bench Press</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>2–3 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Machine Chest Press</span><span class="sub-tag">DB Bench Press</span></div>
+        <div class="note-box">Comfortable arch, quick pause on the chest, explode up on each rep.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 185×10" oninput="markDirty('d3-e0')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="185×10" oninput="markDirty('d3-e0')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="185×10" oninput="markDirty('d3-e0')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e0')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e0">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d3-e1">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Machine Shoulder Press</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Cable Shoulder Press</span><span class="sub-tag">Seated DB Shoulder Press</span></div>
+        <div class="note-box">Ensure elbows break at least 90°. Mind-muscle connection with your shoulders.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 120×10" oninput="markDirty('d3-e1')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="120×10" oninput="markDirty('d3-e1')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="120×10" oninput="markDirty('d3-e1')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e1')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e1">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d3-e2">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Bottom-Half DB Fly</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Bottom-Half Seated Cable Fly</span><span class="sub-tag">Low to High Cable Crossover</span></div>
+        <div class="note-box">All reps in the bottom half of ROM only. Focus on feeling a deep stretch in your pecs at the bottom of each rep.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 40×12" oninput="markDirty('d3-e2')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="40×12" oninput="markDirty('d3-e2')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="40×12" oninput="markDirty('d3-e2')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e2')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e2">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d3-e3">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">High Cable Lateral Raise</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">High Cable Cuffed Lateral Raise</span><span class="sub-tag">Lean-In DB Lateral Raise</span></div>
+        <div class="note-box">Focus on squeezing your lateral delt to move the weight.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 15×12" oninput="markDirty('d3-e3')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="15×12" oninput="markDirty('d3-e3')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="15×12" oninput="markDirty('d3-e3')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e3')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e3">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d3-e4">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Overhead Cable Triceps Extension (Rope)</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">DB Skull Crusher</span></div>
+        <div class="note-box">Optionally pause 0.5–1 second in the stretched aspect of each rep.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 45×12" oninput="markDirty('d3-e4')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="45×12" oninput="markDirty('d3-e4')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="45×12" oninput="markDirty('d3-e4')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e4')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e4">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d3-e5">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Cable Triceps Extension (Bar)</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">12–15 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">DB Triceps Kickback</span><span class="sub-tag">Bench Dip</span></div>
+        <div class="note-box">Can be done with weight or band assist. At lockout, squeeze shoulder blades back behind your body.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 50×15" oninput="markDirty('d3-e5')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="50×15" oninput="markDirty('d3-e5')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="50×15" oninput="markDirty('d3-e5')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e5')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e5">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d3-e6">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Roman Chair Leg Raise</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–20 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Hanging Leg Raise</span><span class="sub-tag">Modified Leg Raise</span></div>
+        <div class="note-box">Allow your lower back to round as you curl legs up. Go until you hit the target RPE with controlled form.</div>
+        <div class="section-label">Track Sets (reps)</div>
+        <div class="tracking-grid sets-3">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 15 reps" oninput="markDirty('d3-e6')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="15 reps" oninput="markDirty('d3-e6')"></div>
+          <div class="tracking-cell"><label>Set 3</label><input type="text" inputmode="decimal" placeholder="15 reps" oninput="markDirty('d3-e6')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d3-e6')">Save</button>
+        <div class="saved-indicator" id="ind-d3-e6">✓ Saved</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ DAY 5 -->
+<div class="day-block" id="day-4">
+  <div class="day-header">
+    <div><div class="day-label">Day 5</div><div class="day-title">Legs</div></div>
+    <div class="focus-badge">Hypertrophy Focus</div>
+  </div>
+  <div class="exercise-list">
+
+    <div class="exercise-card" id="d4-e0">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Leg Press</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 2</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~6–7</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>2–3 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Smith Machine Static Lunge</span><span class="sub-tag">DB Walking Lunge</span></div>
+        <div class="note-box">Feet lower on platform for quad focus. Get as deep as possible without excessive back rounding. Slight pause at the bottom.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 360×10" oninput="markDirty('d4-e0')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="360×10" oninput="markDirty('d4-e0')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e0')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e0">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d4-e1">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Seated Leg Curl</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Lying Leg Curl</span><span class="sub-tag">Nordic Ham Curl</span></div>
+        <div class="note-box">Lean forward over the machine to get a maximum stretch in your hamstrings.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 80×12" oninput="markDirty('d4-e1')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="80×12" oninput="markDirty('d4-e1')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e1')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e1">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d4-e2">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">DB Bulgarian Split Squat</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 2</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>2–3 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">DB Step-Up</span><span class="sub-tag">Goblet Squat</span></div>
+        <div class="note-box">Lower until front thigh is parallel to the ground. Drive through your front heel on the way up.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 50×10" oninput="markDirty('d4-e2')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="50×10" oninput="markDirty('d4-e2')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e2')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e2">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d4-e3">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Leg Extension</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Reverse Nordic</span><span class="sub-tag">Sissy Squat</span></div>
+        <div class="note-box">Seat back as far as possible. Grab handles to pull butt into seat. 2–3 second negative. Feel quads pulling apart.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 100×12" oninput="markDirty('d4-e3')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="100×12" oninput="markDirty('d4-e3')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e3')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e3">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d4-e4">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Machine Hip Adduction</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Cable Hip Adduction</span><span class="sub-tag">Copenhagen Hip Adduction</span></div>
+        <div class="note-box">Mind-muscle connection with your inner thighs. Great for adding thigh mass from the front — push them hard!</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 130×12" oninput="markDirty('d4-e4')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="130×12" oninput="markDirty('d4-e4')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e4')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e4">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d4-e5">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Machine Hip Abduction</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Cable Hip Abduction</span><span class="sub-tag">Lateral Band Walk</span></div>
+        <div class="note-box">Use pads if possible to increase ROM. Lean forward and grab machine rails to stretch the glutes further.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 120×12" oninput="markDirty('d4-e5')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="120×12" oninput="markDirty('d4-e5')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e5')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e5">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="exercise-card" id="d4-e6">
+      <div class="exercise-card-header" onclick="toggleCard(this)">
+        <div><div class="exercise-name">Standing Calf Raise</div>
+          <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
+        </div><span class="chevron">▼</span>
+      </div>
+      <div class="exercise-body">
+        <div class="detail-grid"><div class="detail-item"><label>Rest</label><span>1–2 min</span></div><div class="detail-item"><label>Intensity Tech</label><span>N/A</span></div></div>
+        <div class="subs-row"><span class="sub-tag">Seated Calf Raise</span><span class="sub-tag">Leg Press Calf Press</span></div>
+        <div class="note-box">1–2 second pause at bottom. Roll ankle back and forth on the balls of your feet rather than just going up on toes.</div>
+        <div class="section-label">Track Sets (weight × reps)</div>
+        <div class="tracking-grid sets-2">
+          <div class="tracking-cell"><label>Set 1</label><input type="text" inputmode="decimal" placeholder="e.g. 180×12" oninput="markDirty('d4-e6')"></div>
+          <div class="tracking-cell"><label>Set 2</label><input type="text" inputmode="decimal" placeholder="180×12" oninput="markDirty('d4-e6')"></div>
+        </div>
+        <button class="save-btn" onclick="saveExercise('d4-e6')">Save</button>
+        <div class="saved-indicator" id="ind-d4-e6">✓ Saved</div>
+      </div>
+    </div>
+
+    <div class="rest-day"><h3>REST DAY</h3><p>Following Day 5</p></div>
+  </div>
+</div>
+
+<script>
+  // ── Service Worker ──────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  // ── Navigation ──────────────────────────────────────────
+  function showDay(idx) {
+    document.querySelectorAll('.day-block').forEach((b, i) => b.classList.toggle('active', i === idx));
+    document.querySelectorAll('.day-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    const btn = document.querySelectorAll('.day-btn')[idx];
+    if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  function toggleCard(header) {
+    header.closest('.exercise-card').classList.toggle('open');
+  }
+
+  // ── localStorage ────────────────────────────────────────
+  const STORAGE_KEY = 'bbt_workout_data';
+
+  function getAllData() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+  }
+
+  function saveExercise(id) {
+    const card = document.getElementById(id);
+    const inputs = card.querySelectorAll('input');
+    const values = Array.from(inputs).map(i => i.value.trim());
+    const data = getAllData();
+    data[id] = values;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+    // Visual feedback
+    const btn = card.querySelector('.save-btn');
+    const ind = document.getElementById('ind-' + id);
+    btn.textContent = '✓ Saved';
+    btn.classList.add('saved-state');
+    ind.classList.add('visible');
+    setTimeout(() => { btn.textContent = 'Save'; btn.classList.remove('saved-state'); }, 1500);
+
+    // Mark card and update dots
+    updateCardState(id, values);
+    updateAllDots();
+  }
+
+  function markDirty(id) {
+    const btn = document.getElementById(id)?.querySelector('.save-btn');
+    if (btn && btn.textContent === '✓ Saved') btn.textContent = 'Save';
+  }
+
+  function updateCardState(id, values) {
+    const card = document.getElementById(id);
+    if (!card) return;
+    const hasData = values.some(v => v !== '');
+    card.classList.toggle('has-data', hasData);
+  }
+
+  function updateAllDots() {
+    // Count exercises per day and how many have saved data
+    const data = getAllData();
+    // Map: day index → [exerciseIds]
+    const dayMap = [
+      ['d0-e0','d0-e1','d0-e2','d0-e3','d0-e4','d0-e5','d0-e6'],
+      ['d1-e0','d1-e1','d1-e2','d1-e3','d1-e4','d1-e5'],
+      ['d2-e0','d2-e1','d2-e2','d2-e3','d2-e4','d2-e5','d2-e6'],
+      ['d3-e0','d3-e1','d3-e2','d3-e3','d3-e4','d3-e5','d3-e6'],
+      ['d4-e0','d4-e1','d4-e2','d4-e3','d4-e4','d4-e5','d4-e6'],
+    ];
+    dayMap.forEach((ids, dayIdx) => {
+      const container = document.getElementById('dots-' + dayIdx);
+      if (!container) return;
+      container.innerHTML = '';
+      ids.forEach(id => {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        const saved = data[id] && data[id].some(v => v !== '');
+        if (saved) dot.classList.add('filled');
+        container.appendChild(dot);
+      });
+    });
+  }
+
+  function loadAllData() {
+    const data = getAllData();
+    Object.entries(data).forEach(([id, values]) => {
+      const card = document.getElementById(id);
+      if (!card) return;
+      const inputs = card.querySelectorAll('input');
+      values.forEach((val, i) => { if (inputs[i]) inputs[i].value = val; });
+      const ind = document.getElementById('ind-' + id);
+      if (ind && values.some(v => v !== '')) ind.classList.add('visible');
+      updateCardState(id, values);
+    });
+    updateAllDots();
+  }
+
+  function resetAll() {
+    if (!confirm('Clear all saved workout data? This cannot be undone.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('.exercise-card input').forEach(i => i.value = '');
+    document.querySelectorAll('.exercise-card').forEach(c => c.classList.remove('has-data'));
+    document.querySelectorAll('.saved-indicator').forEach(i => i.classList.remove('visible'));
+    updateAllDots();
+  }
+
+  // ── Init ────────────────────────────────────────────────
+  loadAllData();
+</script>
+
+</body>
+</html>
