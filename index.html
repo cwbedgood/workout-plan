@@ -232,6 +232,36 @@
   .chevron { color: rgba(255,255,255,0.4); font-size: 11px; transition: transform 0.2s; flex-shrink: 0; margin-top: 2px; }
   .exercise-card.open .chevron { transform: rotate(180deg); }
 
+  .done-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: transparent;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    padding: 0;
+    line-height: 1;
+    margin-top: 1px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .exercise-card.done .done-btn {
+    background: var(--saved);
+    border-color: var(--saved);
+    color: var(--white);
+  }
+  .exercise-card.done .exercise-name {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+
   .exercise-body { display: none; padding: 12px; }
   .exercise-card.open .exercise-body { display: block; }
 
@@ -1225,9 +1255,8 @@
   }
 
   function updateAllDots() {
-    // Count exercises per day and how many have saved data
     const data = getAllData();
-    // Map: day index → [exerciseIds]
+    const done = data._done || {};
     const dayMap = [
       ['d0-e0','d0-e1','d0-e2','d0-e3','d0-e4','d0-e5','d0-e6'],
       ['d1-e0','d1-e1','d1-e2','d1-e3','d1-e4','d1-e5'],
@@ -1242,8 +1271,8 @@
       ids.forEach(id => {
         const dot = document.createElement('div');
         dot.className = 'dot';
-        const saved = data[id] && data[id].some(v => v !== '');
-        if (saved) dot.classList.add('filled');
+        const hasSavedData = data[id] && data[id].some(v => v !== '');
+        if (hasSavedData || done[id]) dot.classList.add('filled');
         container.appendChild(dot);
       });
     });
@@ -1251,7 +1280,9 @@
 
   function loadAllData() {
     const data = getAllData();
+    const done = data._done || {};
     Object.entries(data).forEach(([id, values]) => {
+      if (id === '_done') return;
       const card = document.getElementById(id);
       if (!card) return;
       const inputs = card.querySelectorAll('input');
@@ -1260,6 +1291,9 @@
       if (ind && values.some(v => v !== '')) ind.classList.add('visible');
       updateCardState(id, values);
     });
+    Object.entries(done).forEach(([id, isDone]) => {
+      if (isDone) document.getElementById(id)?.classList.add('done');
+    });
     updateAllDots();
   }
 
@@ -1267,12 +1301,37 @@
     if (!confirm('Clear all saved workout data? This cannot be undone.')) return;
     localStorage.removeItem(STORAGE_KEY);
     document.querySelectorAll('.exercise-card input').forEach(i => i.value = '');
-    document.querySelectorAll('.exercise-card').forEach(c => c.classList.remove('has-data'));
+    document.querySelectorAll('.exercise-card').forEach(c => c.classList.remove('has-data', 'done'));
     document.querySelectorAll('.saved-indicator').forEach(i => i.classList.remove('visible'));
     updateAllDots();
   }
 
+  function toggleDone(id, event) {
+    event.stopPropagation();
+    const data = getAllData();
+    const done = data._done || {};
+    done[id] = !done[id];
+    data._done = done;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    document.getElementById(id)?.classList.toggle('done', done[id]);
+    updateAllDots();
+  }
+
+  function initDoneButtons() {
+    document.querySelectorAll('.exercise-card').forEach(card => {
+      const header = card.querySelector('.exercise-card-header');
+      const chevron = header.querySelector('.chevron');
+      const btn = document.createElement('button');
+      btn.className = 'done-btn';
+      btn.textContent = '✓';
+      btn.title = 'Mark complete';
+      btn.onclick = (e) => toggleDone(card.id, e);
+      header.insertBefore(btn, chevron);
+    });
+  }
+
   // ── Init ────────────────────────────────────────────────
+  initDoneButtons();
   loadAllData();
 </script>
 
