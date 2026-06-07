@@ -229,6 +229,16 @@
     border: 1px solid rgba(255,255,255,0.12);
   }
 
+  /* ── Muscle Diagram ──────────────────────────────────── */
+  .muscle-diagram-container { margin: 0 0 14px; }
+  .muscle-diagram { width: 100%; max-width: 260px; display: block; margin: 0 auto; }
+  .diagram-label { font-size: 7px; fill: var(--text-muted); font-family: 'DM Sans', sans-serif; letter-spacing: 0.8px; text-transform: uppercase; }
+  .body-divider { stroke: var(--border); stroke-width: 0.5; }
+  .body-base * { fill: var(--olive); fill-opacity: 0.12; }
+  .muscle-group * { fill: transparent; }
+  .muscle-group.primary * { fill: var(--accent); fill-opacity: 0.85; }
+  .muscle-group.secondary * { fill: var(--accent); fill-opacity: 0.3; }
+
   .meta-chip {
     background: rgba(255,255,255,0.12);
     color: rgba(255,255,255,0.9);
@@ -1374,10 +1384,202 @@
     });
   }
 
+  // ── Muscle Diagrams ─────────────────────────────────────
+  const muscleTagToIds = {
+    'Chest':         ['chest'],
+    'Front Delts':   ['front-delts'],
+    'Lateral Delts': ['lateral-delts'],
+    'Rear Delts':    ['rear-delts'],
+    'Shoulders':     ['front-delts', 'lateral-delts'],
+    'Triceps':       ['triceps'],
+    'Anconeus':      ['triceps'],
+    'Biceps':        ['biceps'],
+    'Brachialis':    ['brachialis', 'biceps'],
+    'Lats':          ['lats'],
+    'Upper Back':    ['upper-back'],
+    'Rhomboids':     ['rhomboids'],
+    'Traps':         ['traps'],
+    'Quads':         ['quads'],
+    'VMO':           ['vmo', 'quads'],
+    'Adductors':     ['adductors'],
+    'Hip Abductors': ['glutes'],
+    'Hamstrings':    ['hamstrings'],
+    'Glutes':        ['glutes'],
+    'Gastrocnemius': ['gastrocnemius'],
+    'Soleus':        ['soleus', 'gastrocnemius'],
+    'Abs':           ['abs'],
+    'Hip Flexors':   ['hip-flexors'],
+  };
+
+  function initMuscleDiagrams() {
+    const tpl = document.getElementById('muscle-diagram-tpl');
+    if (!tpl) return;
+    document.querySelectorAll('.exercise-card').forEach(card => {
+      const tags = [...card.querySelectorAll('.muscle-tag')].map(t => t.textContent.trim());
+      if (!tags.length) return;
+
+      const primaryIds   = new Set((muscleTagToIds[tags[0]] || []).flat());
+      const secondaryIds = new Set((tags[1] ? muscleTagToIds[tags[1]] || [] : []).flat());
+      primaryIds.forEach(id => secondaryIds.delete(id));
+
+      const svg = tpl.cloneNode(true);
+      svg.removeAttribute('id');
+      svg.style.display = '';
+      svg.classList.add('muscle-diagram');
+
+      svg.querySelectorAll('.muscle-group').forEach(g => {
+        const m = g.dataset.muscle;
+        if (primaryIds.has(m))        g.classList.add('primary');
+        else if (secondaryIds.has(m)) g.classList.add('secondary');
+      });
+
+      const container = document.createElement('div');
+      container.className = 'muscle-diagram-container';
+      container.appendChild(svg);
+      card.querySelector('.exercise-body').prepend(container);
+    });
+  }
+
   // ── Init ────────────────────────────────────────────────
   initDoneButtons();
   loadAllData();
+  initMuscleDiagrams();
 </script>
+
+<!-- Hidden muscle diagram template -->
+<svg id="muscle-diagram-tpl" style="display:none" viewBox="0 0 200 165" xmlns="http://www.w3.org/2000/svg">
+  <text x="50" y="9" text-anchor="middle" class="diagram-label">Front</text>
+  <text x="150" y="9" text-anchor="middle" class="diagram-label">Back</text>
+  <line x1="100" y1="11" x2="100" y2="164" class="body-divider"/>
+
+  <!-- FRONT silhouette -->
+  <g class="body-base">
+    <circle cx="50" cy="19" r="10"/>
+    <rect x="46" y="29" width="8" height="7" rx="2"/>
+    <ellipse cx="33" cy="37" rx="9" ry="5"/>
+    <ellipse cx="67" cy="37" rx="9" ry="5"/>
+    <path d="M 37,34 Q 34,63 35,93 L 65,93 Q 66,63 63,34 Z"/>
+    <ellipse cx="26" cy="56" rx="6" ry="17"/>
+    <ellipse cx="74" cy="56" rx="6" ry="17"/>
+    <ellipse cx="25" cy="87" rx="5" ry="13"/>
+    <ellipse cx="75" cy="87" rx="5" ry="13"/>
+    <ellipse cx="24" cy="103" rx="4" ry="5"/>
+    <ellipse cx="76" cy="103" rx="4" ry="5"/>
+    <ellipse cx="50" cy="97" rx="16" ry="7"/>
+    <ellipse cx="41" cy="117" rx="9" ry="16"/>
+    <ellipse cx="59" cy="117" rx="9" ry="16"/>
+    <ellipse cx="40" cy="146" rx="7" ry="14"/>
+    <ellipse cx="60" cy="146" rx="7" ry="14"/>
+    <ellipse cx="40" cy="161" rx="7" ry="4"/>
+    <ellipse cx="60" cy="161" rx="7" ry="4"/>
+  </g>
+
+  <!-- FRONT muscle groups -->
+  <g class="muscle-group" data-muscle="chest">
+    <ellipse cx="43" cy="50" rx="9" ry="7"/>
+    <ellipse cx="57" cy="50" rx="9" ry="7"/>
+  </g>
+  <g class="muscle-group" data-muscle="front-delts">
+    <ellipse cx="33" cy="37" rx="8" ry="5"/>
+    <ellipse cx="67" cy="37" rx="8" ry="5"/>
+  </g>
+  <g class="muscle-group" data-muscle="lateral-delts">
+    <ellipse cx="23" cy="43" rx="5" ry="8"/>
+    <ellipse cx="77" cy="43" rx="5" ry="8"/>
+  </g>
+  <g class="muscle-group" data-muscle="biceps">
+    <ellipse cx="24" cy="54" rx="4" ry="12"/>
+    <ellipse cx="76" cy="54" rx="4" ry="12"/>
+  </g>
+  <g class="muscle-group" data-muscle="brachialis">
+    <ellipse cx="22" cy="68" rx="3" ry="5"/>
+    <ellipse cx="78" cy="68" rx="3" ry="5"/>
+  </g>
+  <g class="muscle-group" data-muscle="abs">
+    <rect x="45" y="60" width="4" height="5" rx="1"/>
+    <rect x="51" y="60" width="4" height="5" rx="1"/>
+    <rect x="45" y="67" width="4" height="5" rx="1"/>
+    <rect x="51" y="67" width="4" height="5" rx="1"/>
+    <rect x="45" y="74" width="4" height="5" rx="1"/>
+    <rect x="51" y="74" width="4" height="5" rx="1"/>
+  </g>
+  <g class="muscle-group" data-muscle="hip-flexors">
+    <ellipse cx="50" cy="91" rx="11" ry="4"/>
+  </g>
+  <g class="muscle-group" data-muscle="quads">
+    <ellipse cx="41" cy="112" rx="8" ry="15"/>
+    <ellipse cx="59" cy="112" rx="8" ry="15"/>
+  </g>
+  <g class="muscle-group" data-muscle="vmo">
+    <ellipse cx="46" cy="127" rx="5" ry="4"/>
+    <ellipse cx="54" cy="127" rx="5" ry="4"/>
+  </g>
+  <g class="muscle-group" data-muscle="adductors">
+    <ellipse cx="47" cy="114" rx="4" ry="13"/>
+    <ellipse cx="53" cy="114" rx="4" ry="13"/>
+  </g>
+
+  <!-- BACK silhouette -->
+  <g class="body-base">
+    <circle cx="150" cy="19" r="10"/>
+    <rect x="146" y="29" width="8" height="7" rx="2"/>
+    <ellipse cx="133" cy="37" rx="9" ry="5"/>
+    <ellipse cx="167" cy="37" rx="9" ry="5"/>
+    <path d="M 137,34 Q 134,63 135,93 L 165,93 Q 166,63 163,34 Z"/>
+    <ellipse cx="126" cy="56" rx="6" ry="17"/>
+    <ellipse cx="174" cy="56" rx="6" ry="17"/>
+    <ellipse cx="125" cy="87" rx="5" ry="13"/>
+    <ellipse cx="175" cy="87" rx="5" ry="13"/>
+    <ellipse cx="124" cy="103" rx="4" ry="5"/>
+    <ellipse cx="176" cy="103" rx="4" ry="5"/>
+    <ellipse cx="150" cy="97" rx="16" ry="7"/>
+    <ellipse cx="141" cy="117" rx="9" ry="16"/>
+    <ellipse cx="159" cy="117" rx="9" ry="16"/>
+    <ellipse cx="140" cy="146" rx="7" ry="14"/>
+    <ellipse cx="160" cy="146" rx="7" ry="14"/>
+    <ellipse cx="140" cy="161" rx="7" ry="4"/>
+    <ellipse cx="160" cy="161" rx="7" ry="4"/>
+  </g>
+
+  <!-- BACK muscle groups -->
+  <g class="muscle-group" data-muscle="traps">
+    <ellipse cx="150" cy="46" rx="12" ry="13"/>
+  </g>
+  <g class="muscle-group" data-muscle="rear-delts">
+    <ellipse cx="133" cy="38" rx="7" ry="5"/>
+    <ellipse cx="167" cy="38" rx="7" ry="5"/>
+  </g>
+  <g class="muscle-group" data-muscle="upper-back">
+    <ellipse cx="150" cy="56" rx="13" ry="10"/>
+  </g>
+  <g class="muscle-group" data-muscle="rhomboids">
+    <ellipse cx="150" cy="53" rx="7" ry="7"/>
+  </g>
+  <g class="muscle-group" data-muscle="lats">
+    <ellipse cx="135" cy="65" rx="7" ry="17"/>
+    <ellipse cx="165" cy="65" rx="7" ry="17"/>
+  </g>
+  <g class="muscle-group" data-muscle="triceps">
+    <ellipse cx="125" cy="55" rx="4" ry="13"/>
+    <ellipse cx="175" cy="55" rx="4" ry="13"/>
+  </g>
+  <g class="muscle-group" data-muscle="glutes">
+    <ellipse cx="143" cy="96" rx="9" ry="9"/>
+    <ellipse cx="157" cy="96" rx="9" ry="9"/>
+  </g>
+  <g class="muscle-group" data-muscle="hamstrings">
+    <ellipse cx="141" cy="117" rx="8" ry="14"/>
+    <ellipse cx="159" cy="117" rx="8" ry="14"/>
+  </g>
+  <g class="muscle-group" data-muscle="gastrocnemius">
+    <ellipse cx="140" cy="143" rx="6" ry="10"/>
+    <ellipse cx="160" cy="143" rx="6" ry="10"/>
+  </g>
+  <g class="muscle-group" data-muscle="soleus">
+    <ellipse cx="140" cy="155" rx="5" ry="7"/>
+    <ellipse cx="160" cy="155" rx="5" ry="7"/>
+  </g>
+</svg>
 
 </body>
 </html>
