@@ -218,6 +218,16 @@
 
   .exercise-name { font-weight: 600; font-size: 14px; flex: 1; }
   .exercise-meta { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+  .muscle-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; }
+  .muscle-tag {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.55);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
 
   .meta-chip {
     background: rgba(255,255,255,0.12);
@@ -410,6 +420,7 @@
     <div class="exercise-card" id="d0-e0">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">45° Incline Barbell Press</div>
+          <div class="muscle-tags"><span class="muscle-tag">Chest</span><span class="muscle-tag">Front Delts</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span>
           </div>
@@ -436,6 +447,7 @@
     <div class="exercise-card" id="d0-e1">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Cable Crossover / Ladders</div>
+          <div class="muscle-tags"><span class="muscle-tag">Chest</span><span class="muscle-tag">Triceps</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
           </div>
@@ -462,6 +474,7 @@
     <div class="exercise-card" id="d0-e2">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Wide-Grip Pull-Up</div>
+          <div class="muscle-tags"><span class="muscle-tag">Lats</span><span class="muscle-tag">Biceps</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span>
           </div>
@@ -488,6 +501,7 @@
     <div class="exercise-card" id="d0-e3">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">High Cable Lateral Raise</div>
+          <div class="muscle-tags"><span class="muscle-tag">Lateral Delts</span><span class="muscle-tag">Traps</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
           </div>
@@ -514,6 +528,7 @@
     <div class="exercise-card" id="d0-e4">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Pending Deficit Row</div>
+          <div class="muscle-tags"><span class="muscle-tag">Lats</span><span class="muscle-tag">Upper Back</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span>
           </div>
@@ -540,6 +555,7 @@
     <div class="exercise-card" id="d0-e5">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Overhead Cable Triceps Extension</div>
+          <div class="muscle-tags"><span class="muscle-tag">Triceps</span><span class="muscle-tag">Shoulders</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
           </div>
@@ -566,6 +582,7 @@
     <div class="exercise-card" id="d0-e6">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Bayesian Cable Curl</div>
+          <div class="muscle-tags"><span class="muscle-tag">Biceps</span><span class="muscle-tag">Brachialis</span></div>
           <div class="exercise-meta">
             <span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span>
           </div>
@@ -603,6 +620,7 @@
     <div class="exercise-card" id="d1-e0">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Lying Leg Curl</div>
+          <div class="muscle-tags"><span class="muscle-tag">Hamstrings</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -624,6 +642,7 @@
     <div class="exercise-card" id="d1-e1">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Smith Machine Squat</div>
+          <div class="muscle-tags"><span class="muscle-tag">Quads</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -645,6 +664,7 @@
     <div class="exercise-card" id="d1-e2">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Barbell RDL</div>
+          <div class="muscle-tags"><span class="muscle-tag">Hamstrings</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -666,6 +686,7 @@
     <div class="exercise-card" id="d1-e3">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Leg Extension</div>
+          <div class="muscle-tags"><span class="muscle-tag">Quads</span><span class="muscle-tag">VMO</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -687,6 +708,7 @@
     <div class="exercise-card" id="d1-e4">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Standing Calf Raise</div>
+          <div class="muscle-tags"><span class="muscle-tag">Gastrocnemius</span><span class="muscle-tag">Soleus</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">4–8 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -708,6 +730,7 @@
     <div class="exercise-card" id="d1-e5">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Cable Crunch</div>
+          <div class="muscle-tags"><span class="muscle-tag">Abs</span><span class="muscle-tag">Hip Flexors</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -741,6 +764,7 @@
     <div class="exercise-card" id="d2-e0">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Neutral-Grip Lat Pulldown</div>
+          <div class="muscle-tags"><span class="muscle-tag">Lats</span><span class="muscle-tag">Biceps</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -762,6 +786,7 @@
     <div class="exercise-card" id="d2-e1">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Chest Supported Machine Row</div>
+          <div class="muscle-tags"><span class="muscle-tag">Upper Back</span><span class="muscle-tag">Rear Delts</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -783,6 +808,7 @@
     <div class="exercise-card" id="d2-e2">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Neutral-Grip Seated Cable Row</div>
+          <div class="muscle-tags"><span class="muscle-tag">Lats</span><span class="muscle-tag">Rhomboids</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -804,6 +830,7 @@
     <div class="exercise-card" id="d2-e3">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">1-Arm 45° Cable Rear Delt Fly</div>
+          <div class="muscle-tags"><span class="muscle-tag">Rear Delts</span><span class="muscle-tag">Traps</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -825,6 +852,7 @@
     <div class="exercise-card" id="d2-e4">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Machine Shrug</div>
+          <div class="muscle-tags"><span class="muscle-tag">Traps</span><span class="muscle-tag">Rhomboids</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -846,6 +874,7 @@
     <div class="exercise-card" id="d2-e5">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">EZ Bar Cable Curl</div>
+          <div class="muscle-tags"><span class="muscle-tag">Biceps</span><span class="muscle-tag">Brachialis</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -866,6 +895,7 @@
     <div class="exercise-card" id="d2-e6">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Machine Preacher Curl</div>
+          <div class="muscle-tags"><span class="muscle-tag">Biceps</span><span class="muscle-tag">Brachialis</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 1</span><span class="meta-chip">12–15 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -897,6 +927,7 @@
     <div class="exercise-card" id="d3-e0">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Barbell Bench Press</div>
+          <div class="muscle-tags"><span class="muscle-tag">Chest</span><span class="muscle-tag">Triceps</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -918,6 +949,7 @@
     <div class="exercise-card" id="d3-e1">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Machine Shoulder Press</div>
+          <div class="muscle-tags"><span class="muscle-tag">Shoulders</span><span class="muscle-tag">Triceps</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 3</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -939,6 +971,7 @@
     <div class="exercise-card" id="d3-e2">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Bottom-Half DB Fly</div>
+          <div class="muscle-tags"><span class="muscle-tag">Chest</span><span class="muscle-tag">Front Delts</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -960,6 +993,7 @@
     <div class="exercise-card" id="d3-e3">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">High Cable Lateral Raise</div>
+          <div class="muscle-tags"><span class="muscle-tag">Lateral Delts</span><span class="muscle-tag">Traps</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–0</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -981,6 +1015,7 @@
     <div class="exercise-card" id="d3-e4">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Overhead Cable Triceps Extension (Rope)</div>
+          <div class="muscle-tags"><span class="muscle-tag">Triceps</span><span class="muscle-tag">Shoulders</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1002,6 +1037,7 @@
     <div class="exercise-card" id="d3-e5">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Cable Triceps Extension (Bar)</div>
+          <div class="muscle-tags"><span class="muscle-tag">Triceps</span><span class="muscle-tag">Anconeus</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">12–15 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1023,6 +1059,7 @@
     <div class="exercise-card" id="d3-e6">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Roman Chair Leg Raise</div>
+          <div class="muscle-tags"><span class="muscle-tag">Abs</span><span class="muscle-tag">Hip Flexors</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: N/A</span><span class="meta-chip">Work: 3</span><span class="meta-chip">10–20 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1055,6 +1092,7 @@
     <div class="exercise-card" id="d4-e0">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Leg Press</div>
+          <div class="muscle-tags"><span class="muscle-tag">Quads</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–4</span><span class="meta-chip">Work: 2</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~6–7</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1075,6 +1113,7 @@
     <div class="exercise-card" id="d4-e1">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Seated Leg Curl</div>
+          <div class="muscle-tags"><span class="muscle-tag">Hamstrings</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1095,6 +1134,7 @@
     <div class="exercise-card" id="d4-e2">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">DB Bulgarian Split Squat</div>
+          <div class="muscle-tags"><span class="muscle-tag">Quads</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 2–3</span><span class="meta-chip">Work: 2</span><span class="meta-chip">8–10 reps</span><span class="meta-chip rpe">RPE ~7–8</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1115,6 +1155,7 @@
     <div class="exercise-card" id="d4-e3">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Leg Extension</div>
+          <div class="muscle-tags"><span class="muscle-tag">Quads</span><span class="muscle-tag">VMO</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1135,6 +1176,7 @@
     <div class="exercise-card" id="d4-e4">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Machine Hip Adduction</div>
+          <div class="muscle-tags"><span class="muscle-tag">Adductors</span><span class="muscle-tag">Glutes</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1155,6 +1197,7 @@
     <div class="exercise-card" id="d4-e5">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Machine Hip Abduction</div>
+          <div class="muscle-tags"><span class="muscle-tag">Glutes</span><span class="muscle-tag">Hip Abductors</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
@@ -1175,6 +1218,7 @@
     <div class="exercise-card" id="d4-e6">
       <div class="exercise-card-header" onclick="toggleCard(this)">
         <div><div class="exercise-name">Standing Calf Raise</div>
+          <div class="muscle-tags"><span class="muscle-tag">Gastrocnemius</span><span class="muscle-tag">Soleus</span></div>
           <div class="exercise-meta"><span class="meta-chip">W-up: 1–2</span><span class="meta-chip">Work: 2</span><span class="meta-chip">10–12 reps</span><span class="meta-chip rpe">RPE ~8–9</span></div>
         </div><span class="chevron">▼</span>
       </div>
