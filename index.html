@@ -48,6 +48,20 @@
     top: 0;
     z-index: 100;
   }
+  .reset-btn {
+    margin-top: 8px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.55);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  .reset-btn:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.85); }
 
   header h1 {
     font-family: 'Bebas Neue', sans-serif;
@@ -374,6 +388,7 @@
 <header>
   <h1>Bodybuilding Transformation System</h1>
   <p>Foundation Block — Week 1</p>
+  <button class="reset-btn" onclick="resetAll()">Reset All Data</button>
 </header>
 
 <!-- Warm-up Protocol (collapsible) -->
